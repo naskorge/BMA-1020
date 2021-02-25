@@ -1,25 +1,21 @@
 #include <SFML/Graphics.hpp>
 #include <random>
-
 using namespace std;
 using namespace sf;
 const float PI = 3.14159265f;
 
-//Random function used to assign random values to different things, pos, color, radius
-float rng(unsigned var){
-	unsigned seed = var;
-	default_random_engine generator(seed);
-	uniform_real_distribution<float> distribution(0.0f, 1.0f);
+
+//Gets a random seed every time you run the program
+random_device device;
+default_random_engine generator(device());
+uniform_real_distribution<float> distribution(0.0f, 1.0f);
+
+//Random function used to assign random values to different things, pos, color, radius etc...
+float rng(){
 	return distribution(generator);
 }
 
-//Random function to randomize start velocities for circles
-float rng2(unsigned var) {
-	unsigned seed = var;
-	default_random_engine generator(seed);
-	uniform_real_distribution<float> distribution(0.0f, 4.0f);
-	return distribution(generator);
-}
+
 
 //Class expanding on the functionality from SFMLs Circleshape class
 //Used to store all variables related to circles
@@ -54,13 +50,13 @@ int main()
 	for (int i = 0; i < 500; i++)
 	{
 		myCircles circle;			//Local class type variable
-		circle.setPosition(rng(i) * 600 + 600, -600 * rng(i+3));
-		circle.setRadius(25*rng(i*3) + 10);
+		circle.setPosition(rng() * 600 + 600, -600 * rng());
+		circle.setRadius(25*rng() + 10);
 		circle.setPointCount(30);
-		circle.setFillColor(Color(255 * rng(i),125*rng(i+2),175*rng(i+5), 255));
+		circle.setFillColor(Color(255 * rng(),125*rng(),175*rng(), 255));
 		circle.mass(circle.getRadius());
 		circle.force = Vector2f(0.0f, 0.0f); 
-		circle.vel = Vector2f(0.0f + rng2(i + 8), 0.0f + rng2(i+1)); 
+		circle.vel = Vector2f(0.0f + rng()*4.0f , 0.0f + rng() * 4.0f); 
 		drawCircles.push_back(circle); //Passing all values to the circle array.
 	}
 
@@ -113,7 +109,7 @@ int main()
 			if (drawCircles[i].getPosition().y >= 1200 - drawCircles[i].getRadius()*2)
 			{
 				drawCircles[i].setPosition(drawCircles[i].getPosition().x, 1200 - drawCircles[i].getRadius() * 2);
-				drawCircles[i].setFillColor(Color(255 * rng(i) * at, 180, 255 * rng(i + 2) * at));
+				drawCircles[i].setFillColor(Color(255 * rng() * at, 180, 255 * rng() * at));
 				drawCircles[i].vel.y = drawCircles[i].vel.y * (-0.9f);
 			}
 		}
